@@ -35,6 +35,12 @@ class Conversation extends React.Component {
             return <div className="max-width-2 mx-auto">
                 <h2 className="h2 center my2">Object sent to server, for example</h2>
                 <Output fields={fields} />
+                <a href='#' style={{
+                        color: 'inherit'
+                    }} onClick={e => {
+                    e.preventDefault()
+                    return this.props.conversationActions.startOver()
+                }}>Reset demo</a>
             </div>
         }
 

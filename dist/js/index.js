@@ -43004,7 +43004,17 @@ var Conversation = function (_React$Component) {
                         { className: 'h2 center my2' },
                         'Object sent to server, for example'
                     ),
-                    _react2.default.createElement(_output2.default, { fields: fields })
+                    _react2.default.createElement(_output2.default, { fields: fields }),
+                    _react2.default.createElement(
+                        'a',
+                        { href: '#', style: {
+                                color: 'inherit'
+                            }, onClick: function onClick(e) {
+                                e.preventDefault();
+                                return _this2.props.conversationActions.startOver();
+                            } },
+                        'Reset demo'
+                    )
                 );
             }
 
@@ -43115,7 +43125,7 @@ var Output = function Output(_ref) {
 
     return _react2.default.createElement(
         'div',
-        null,
+        { className: 'mb2' },
         _react2.default.createElement(_reactJsonPretty2.default, { id: 'json-pretty', json: fields.reduce(function (accum, current) {
                 return _extends({}, accum, _defineProperty({}, current.field, current.response));
             }, {}) })
