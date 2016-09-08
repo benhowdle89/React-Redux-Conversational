@@ -22,7 +22,7 @@ const initialState = {
     }, {
         question: 'What\'s your email address?',
         field: 'EMAIL',
-        prefix: 'My email address is',
+        prefix: 'My email is',
         response: '',
     }]
 }

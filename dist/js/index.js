@@ -42881,7 +42881,7 @@ var Response = function Response(_ref) {
         ),
         _react2.default.createElement(
             'div',
-            { className: 'mt4 col-6 p1 rounded ml1', style: style.response },
+            { className: 'mt4 p1 rounded ml1', style: style.response },
             _react2.default.createElement(
                 'span',
                 { className: 'mr1' },
@@ -43386,7 +43386,7 @@ var initialState = {
     }, {
         question: 'What\'s your email address?',
         field: 'EMAIL',
-        prefix: 'My email address is',
+        prefix: 'My email is',
         response: ''
     }]
 };
