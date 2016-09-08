@@ -28,12 +28,15 @@ const initialState = {
 }
 
 const updateFields = (fields, action) => {
-    return fields.map(response => {
-        if (response.field !== action.field) {
-            return response
+    return fields.map(field => {
+        // is this the field they edited?
+        if (field.field !== action.field) {
+            return field
         }
+
+        // set the new field field
         return {
-            ...response,
+            ...field,
             response: action.response
         }
     })
@@ -42,6 +45,7 @@ const updateFields = (fields, action) => {
 export default function conversationState(state = initialState, action) {
     switch (action.type) {
         case NEXT_FIELD:
+            // lets increment the number of completed fields
             return {
                 ...state,
                 answered: (state.fields.length == state.answered) ? state.answered : ++state.answered

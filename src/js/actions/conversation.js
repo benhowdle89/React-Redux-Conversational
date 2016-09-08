@@ -12,14 +12,6 @@ export function editField(field, response) {
     }
 }
 
-export function saveField(field, response) {
-    return {
-        type: types.SAVE_FIELD,
-        field,
-        response
-    }
-}
-
 export function nextField() {
     return {
         type: types.NEXT_FIELD
@@ -40,7 +32,13 @@ export function startOver() {
 
 export function saveResponses() {
     return (dispatch, getState) => {
-        const { fields } = getState().conversationState
+        // grab the fields from the state, and serialise the structure
+        const fields = getState().conversationState.fields.reduce((accum, current) => {
+                return {
+                    ...accum,
+                    [current.field]: current.response
+                }
+            }, {})
         dispatch(saving())
         return fetch('/fields/', {
             body: {

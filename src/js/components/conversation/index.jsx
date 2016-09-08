@@ -17,12 +17,15 @@ class Conversation extends React.Component {
         let { answered, fields, saving } = nextProps.conversationState,
             { saveResponses } = nextProps.conversationActions
 
+        // have they just answered the last question and hit enter? Then lets
+        // save the fields
         if(!saving && answered == fields.length){
             return saveResponses()
         }
     }
 
     getFields = (fieldsToShow) => {
+        // display the answered fields plus the next one for them to answer
         return this.props.conversationState.fields
             .slice(0, fieldsToShow)
     }
@@ -31,9 +34,10 @@ class Conversation extends React.Component {
         let { answered, fields, saving } = this.props.conversationState,
             fieldsToShow = answered + 1
 
+        // they've hit Save, lets output the data
         if(saving) {
             return <div className="max-width-2 mx-auto">
-                <h2 className="h2 center my2">Object sent to server, for example</h2>
+                <h3 className="h3 my2">Example data structure sent to the server</h3>
                 <Output fields={fields} />
                 <a href='#' style={{
                         color: 'inherit'

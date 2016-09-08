@@ -15,7 +15,7 @@ const style = {
     }
 }
 
-const Response = ({ field, editField, nextField, last }) => {
+const Field = ({ field, editField, nextField, last }) => {
     return <div className="flex mb3 justify-between">
         <div className="flex items-center col-6 mr1">
             <span className="mr1 h2">😀</span>
@@ -32,4 +32,4 @@ const Response = ({ field, editField, nextField, last }) => {
     </div>
 }
 
-export default Response
+export default Field

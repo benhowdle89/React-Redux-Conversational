@@ -42766,8 +42766,10 @@ arguments[4][200][0].apply(exports,arguments)
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 exports.editField = editField;
-exports.saveField = saveField;
 exports.nextField = nextField;
 exports.saving = saving;
 exports.startOver = startOver;
@@ -42781,17 +42783,11 @@ var types = _interopRequireWildcard(_actionTypes);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function editField(field, response) {
     return {
         type: types.EDIT_FIELD,
-        field: field,
-        response: response
-    };
-}
-
-function saveField(field, response) {
-    return {
-        type: types.SAVE_FIELD,
         field: field,
         response: response
     };
@@ -42817,8 +42813,10 @@ function startOver() {
 
 function saveResponses() {
     return function (dispatch, getState) {
-        var fields = getState().conversationState.fields;
-
+        // grab the fields from the state, and serialise the structure
+        var fields = getState().conversationState.fields.reduce(function (accum, current) {
+            return _extends({}, accum, _defineProperty({}, current.field, current.response));
+        }, {});
         dispatch(saving());
         return (0, _fetch.fetch)('/fields/', {
             body: {
@@ -42856,7 +42854,7 @@ var style = {
     }
 };
 
-var Response = function Response(_ref) {
+var Field = function Field(_ref) {
     var field = _ref.field;
     var editField = _ref.editField;
     var nextField = _ref.nextField;
@@ -42898,7 +42896,7 @@ var Response = function Response(_ref) {
     );
 };
 
-exports.default = Response;
+exports.default = Field;
 
 },{"react":344}],357:[function(require,module,exports){
 'use strict';
@@ -42966,6 +42964,7 @@ var Conversation = function (_React$Component) {
         }
 
         return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Conversation.__proto__ || Object.getPrototypeOf(Conversation)).call.apply(_ref, [this].concat(args))), _this), _this.getFields = function (fieldsToShow) {
+            // display the answered fields plus the next one for them to answer
             return _this.props.conversationState.fields.slice(0, fieldsToShow);
         }, _temp), _possibleConstructorReturn(_this, _ret);
     }
@@ -42979,6 +42978,8 @@ var Conversation = function (_React$Component) {
             var saving = _nextProps$conversati.saving;
             var saveResponses = nextProps.conversationActions.saveResponses;
 
+            // have they just answered the last question and hit enter? Then lets
+            // save the fields
 
             if (!saving && answered == fields.length) {
                 return saveResponses();
@@ -42995,14 +42996,15 @@ var Conversation = function (_React$Component) {
             var saving = _props$conversationSt.saving;
             var fieldsToShow = answered + 1;
 
+            // they've hit Save, lets output the data
             if (saving) {
                 return _react2.default.createElement(
                     'div',
                     { className: 'max-width-2 mx-auto' },
                     _react2.default.createElement(
-                        'h2',
-                        { className: 'h2 center my2' },
-                        'Object sent to server, for example'
+                        'h3',
+                        { className: 'h3 my2' },
+                        'Example data structure sent to the server'
                     ),
                     _react2.default.createElement(_output2.default, { fields: fields }),
                     _react2.default.createElement(
@@ -43252,7 +43254,7 @@ var App = function (_React$Component) {
                 _react2.default.createElement(
                     'h1',
                     { className: 'h1 center py2 border-bottom mx-auto max-width-2' },
-                    'React Redux Conversation'
+                    'React Redux Conversational UI'
                 ),
                 _react2.default.createElement(_index2.default, null)
             );
@@ -43392,11 +43394,14 @@ var initialState = {
 };
 
 var updateFields = function updateFields(fields, action) {
-    return fields.map(function (response) {
-        if (response.field !== action.field) {
-            return response;
+    return fields.map(function (field) {
+        // is this the field they edited?
+        if (field.field !== action.field) {
+            return field;
         }
-        return _extends({}, response, {
+
+        // set the new field field
+        return _extends({}, field, {
             response: action.response
         });
     });
@@ -43408,6 +43413,7 @@ function conversationState() {
 
     switch (action.type) {
         case _actionTypes.NEXT_FIELD:
+            // lets increment the number of completed fields
             return _extends({}, state, {
                 answered: state.fields.length == state.answered ? state.answered : ++state.answered
             });
